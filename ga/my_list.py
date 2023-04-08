@@ -5,7 +5,7 @@ sol1 = [0 for _ in range(1000)]
 sol2 = [0 for _ in range(1000)]
 adjacency_list = [0 for _ in range(1000)]
 
-with open('1.csv', mode='r', newline='') as solution:
+with open('./../example_solution.csv', mode='r', newline='') as solution:
 
     order = 0
     # read sol1ution sequence
@@ -15,7 +15,7 @@ with open('1.csv', mode='r', newline='') as solution:
         order += 1
 
 # need to change this file into new csv sol2
-with open('2.csv', mode='r', newline='') as solution:
+with open('./../random/random_solution.csv', mode='r', newline='') as solution:
 
     order = 0
     # read sol1ution sequence
