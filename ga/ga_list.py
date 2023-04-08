@@ -8,7 +8,7 @@ sol1 = []
 sol2 = []
 adjacency_list = []
 
-with open('../example_solution.csv', mode='r', newline='') as sol1ution:
+with open('1.csv', mode='r', newline='') as sol1ution:
 
     # read sol1ution sequence
     reader = csv.reader(sol1ution)
@@ -27,7 +27,7 @@ with open('../example_solution.csv', mode='r', newline='') as sol1ution:
     sol1.append(int(0))
 
 # need to change this file into new csv sol2
-with open('../example_solution.csv', mode='r', newline='') as sol1ution:
+with open('2.csv', mode='r', newline='') as sol1ution:
 
     # read sol1ution sequence
     reader = csv.reader(sol1ution)
@@ -74,7 +74,6 @@ def make_adj_list():
         else:
             adjacency_list[loc].append(sol2[loc-1])
             adjacency_list[loc].append(sol2[loc+1])
-    # print(adjacency_list)
 
 
 make_adj_list()

@@ -5,7 +5,7 @@ sol1 = [0 for _ in range(1000)]
 sol2 = [0 for _ in range(1000)]
 adjacency_list = [0 for _ in range(1000)]
 
-with open('../example_solution.csv', mode='r', newline='') as solution:
+with open('1.csv', mode='r', newline='') as solution:
 
     order = 0
     # read sol1ution sequence
@@ -15,7 +15,7 @@ with open('../example_solution.csv', mode='r', newline='') as solution:
         order += 1
 
 # need to change this file into new csv sol2
-with open('../example_solution.csv', mode='r', newline='') as solution:
+with open('2.csv', mode='r', newline='') as solution:
 
     order = 0
     # read sol1ution sequence
@@ -23,6 +23,7 @@ with open('../example_solution.csv', mode='r', newline='') as solution:
     for row in reader:
         sol2[int(row[0])] = order
         order += 1
+
 
 def make_adj_list():
     for i in range(1000):
@@ -33,7 +34,8 @@ def make_adj_list():
         tmp_set.add(sol2[(i+1) % len(sol1)])
         adjacency_list[i] = list(tmp_set)
 
-    print(adjacency_list)   ## list test
+    print(adjacency_list)  # list test
     return adjacency_list
+
 
 make_adj_list()
