@@ -3,7 +3,7 @@ import csv
 # sol1ution
 sol1 = [0 for _ in range(1000)]
 sol2 = [0 for _ in range(1000)]
-adjacency_list = []
+adjacency_list = [0 for _ in range(1000)]
 
 with open('../example_solution.csv', mode='r', newline='') as solution:
 
@@ -25,8 +25,6 @@ with open('../example_solution.csv', mode='r', newline='') as solution:
         order += 1
 
 def make_adj_list():
-    adjacency_list = [0 for _ in range(len(sol1))]
-    
     for i in range(1000):
         tmp_set = set()
         tmp_set.add(sol1[i-1])
