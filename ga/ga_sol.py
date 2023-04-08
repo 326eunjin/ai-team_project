@@ -12,12 +12,12 @@ def ga_sol(adj):
     visited_cities.add(visit)
     # visit all citeis
     while len(visited_cities) < 1000:
-        order += 1
         rd.shuffle(adj[visit])
         for i in range(len(adj[visit])):
             if adj[visit][i] not in visited_cities:
                 visit = adj[visit][i]               # visit next city
                 sol[visit] = order                  # record the order of city
+                order += 1
                 visited_cities.add(visit)
                 break
         if i == len(adj[visit]) - 1:
