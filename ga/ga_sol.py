@@ -2,9 +2,9 @@ import random as rd
 
 # GA Algorithm Solution
 sol = [0 for i in range(1000)]
-adj = adj_cities()              # get adjacency list of cities  @@은진님 파트@@
 
-def ga_sol():
+
+def ga_sol(adj):
     order = 0                   # the order of each city
     visit = 0                   # current city (start at 0)
     visited_cities = set()      # the set of visited cities
@@ -20,7 +20,7 @@ def ga_sol():
                 sol[visit] = order                  # record the order of city
                 visited_cities.add(visit)
                 break
-    
+
     # make solution as csv file
     f = open('ga_solution.csv', 'w')
     for i in sol:

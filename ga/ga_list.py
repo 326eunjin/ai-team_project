@@ -15,7 +15,7 @@ with open('./../example_solution.csv', mode='r', newline='') as solution:
         order += 1
 
 # need to change this file into new csv sol2
-with open('./../random/random_solution.csv', mode='r', newline='') as solution:
+with open('./../greedy_solution.csv', mode='r', newline='') as solution:
 
     order = 0
     # read sol1ution sequence
