@@ -2,15 +2,15 @@ import random as rd
 
 # GA Algorithm Solution
 sol = [0 for i in range(1000)]
-visited_cities = set()
+adj = adj_cities()              # get adjacency list of cities  @@은진님 파트@@
 
 def ga_sol():
-    adj = adj_cities()          # get adjacency list of cities  @@은진님 파트@@
     order = 0                   # the order of each city
     visit = 0                   # current city (start at 0)
-    visited_cities.add(visit)   # the set of visited cities
+    visited_cities = set()      # the set of visited cities
 
-    # until visiting all citeis
+    visited_cities.add(visit)
+    # visit all citeis
     while len(visited_cities) < 1000:
         order += 1
         rd.shuffle(adj[visit])
@@ -21,6 +21,7 @@ def ga_sol():
                 visited_cities.add(visit)
                 break
     
+    # make solution as csv file
     f = open('ga_solution.csv', 'w')
     for i in sol:
         f.write(str(i) + '\n')
