@@ -26,7 +26,6 @@ def cal_total_cost(sol):
     # 3. evaluate solution cost
     total_cost = 0
     for idx in range(len(sol)-1):
-
         # get city positions
         pos_city_1 = [float(cities[sol[idx]][0]), float(cities[sol[idx]][1])]
         pos_city_2 = [float(cities[sol[idx+1]][0]),
@@ -52,13 +51,10 @@ if __name__ == '__main__':
     # main function
     # ga_sol 여러번 돌리기
     min_td = float("inf")
-    for i in range(1):
-        print("*")
+    for i in range(500):
         tmp_sol = ga_sol.ga_sol(adj)
-        print("**")
         tmp = cal_total_cost(tmp_sol)
-        print("3")
         if min_td >= tmp:
             min_td = tmp
-    make_csv("ga_sol_ret", tmp_sol)
+    make_csv("ga_solution.csv", tmp_sol)
     print(tmp)
