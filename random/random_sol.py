@@ -47,7 +47,7 @@ def cost_calc(sol):
 # find the final cost in 500 times random solution
 def find_final_cost():
     final_cost = sys.maxsize
-    for idx in range(5):
+    for idx in range(500):
         sol = random_sol()
         sol.append(int(0))
         cost = cost_calc(sol)
