@@ -40,7 +40,7 @@ with open('../example_solution.csv', mode='r', newline='') as sol1ution:
     front = sol2[idx:]
     back = sol2[0:idx]
 
-    sol1 = front + back
+    sol2 = front + back
 
     # expand 0 city (start) for simplicity
     sol2.append(int(0))
