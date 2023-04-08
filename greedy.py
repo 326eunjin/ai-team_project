@@ -20,7 +20,6 @@ with open('./2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as ts
 
 
 def greedy():
-    visited_cities.add(0)
     order = 0
     i = 0
     # i가 지금 도시
