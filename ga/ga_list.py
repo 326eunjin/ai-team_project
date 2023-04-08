@@ -34,7 +34,7 @@ def make_adj_list():
         tmp_set.add(sol2[(i+1) % len(sol1)])
         adjacency_list[i] = list(tmp_set)
 
-    print(adjacency_list)  # list test
+    # print(adjacency_list)  # list test
     return adjacency_list
 
 

@@ -37,7 +37,8 @@ def cal_total_cost(sol):
 
     # accumulation
         total_cost += dist
-    print('final cost: '+str(total_cost))
+        return total_cost
+    # print('final cost: '+str(total_cost))
 
 
 # 2. get TSP city map
@@ -46,3 +47,18 @@ with open('./../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as
     reader = csv.reader(tsp)
     for row in reader:
         cities.append(row)
+
+if __name__ == '__main__':
+    # main function
+    # ga_sol 여러번 돌리기
+    min_td = float("inf")
+    for i in range(1):
+        print("*")
+        tmp_sol = ga_sol.ga_sol(adj)
+        print("**")
+        tmp = cal_total_cost(tmp_sol)
+        print("3")
+        if min_td >= tmp:
+            min_td = tmp
+    make_csv("ga_sol_ret", tmp_sol)
+    print(tmp)
