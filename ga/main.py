@@ -19,7 +19,7 @@ def make_csv(path, sol):
         f.write(str(i) + '\n')
 
 def cal_total_cost(sol):
-    # 3. evaluate solution cost
+    # evaluate solution cost
     total_cost = 0
     for idx in range(len(sol)-1):
         # get city positions
@@ -36,7 +36,7 @@ def cal_total_cost(sol):
     # print('final cost: '+str(total_cost))
 
 
-# 2. get TSP city map
+# get TSP city map
 with open('./../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
     # read TSP city map
     reader = csv.reader(tsp)
