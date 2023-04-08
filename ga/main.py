@@ -1,5 +1,5 @@
-import numpy as np
 import csv
+import numpy as np
 import ga_list
 import ga_sol
 
@@ -8,19 +8,15 @@ cities = []
 adj = ga_list.make_adj_list()
 
 # Euclidean distance measuring function
-
-
 def distance(x, y):
     dist = np.linalg.norm(np.array(x) - np.array(y))
     return dist
-
 
 def make_csv(path, sol):
     f = open(path, 'w')
     # write each element of sol to the csv file
     for i in sol:
         f.write(str(i) + '\n')
-
 
 def cal_total_cost(sol):
     # 3. evaluate solution cost
@@ -36,7 +32,7 @@ def cal_total_cost(sol):
 
     # accumulation
         total_cost += dist
-        return total_cost
+    return total_cost
     # print('final cost: '+str(total_cost))
 
 
@@ -47,8 +43,8 @@ with open('./../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as
     for row in reader:
         cities.append(row)
 
+# main function
 if __name__ == '__main__':
-    # main function
     # ga_sol 여러번 돌리기
     min_td = float("inf")
     for i in range(500):
