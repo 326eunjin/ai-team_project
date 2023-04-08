@@ -24,3 +24,5 @@ def ga_sol():
     f = open('ga_solution.csv', 'w')
     for i in sol:
         f.write(str(i) + '\n')
+
+    return sol
