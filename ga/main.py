@@ -5,7 +5,28 @@ import ga_sol
 
 # given cities
 cities = []
-adj = ga_list.make_adj_list()
+# sol1ution
+sol1 = [0 for _ in range(1000)]
+sol2 = [0 for _ in range(1000)]
+
+with open('./../example_solution.csv', mode='r', newline='') as solution:
+
+    order = 0
+    # read sol1ution sequence
+    reader = csv.reader(solution)
+    for row in reader:
+        sol1[int(row[0])] = order
+        order += 1
+
+# need to change this file into new csv sol2
+with open('./../greedy_solution.csv', mode='r', newline='') as solution:
+
+    order = 0
+    # read sol1ution sequence
+    reader = csv.reader(solution)
+    for row in reader:
+        sol2[int(row[0])] = order
+        order += 1
 
 # get TSP city map
 with open('./../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
@@ -49,12 +70,19 @@ def cal_total_cost(sol):
 
 # main function
 if __name__ == '__main__':
-    # ga_sol 여러번 돌리기
     min_td = float("inf")
+    # ga_sol 여러번 돌리기
     for i in range(1000):
-        tmp_sol = ga_sol.ga_sol(adj)
+        tmp_sol = ga_sol.ga_sol(ga_list.make_adj_list(sol1, sol2))
         tmp = cal_total_cost(tmp_sol)
         if min_td >= tmp:
             min_td = tmp
+        sol1 = tmp_sol
+        tmp_sol = ga_sol.ga_sol(ga_list.make_adj_list(sol1, sol2))
+        tmp = cal_total_cost(tmp_sol)
+        if min_td >= tmp:
+            min_td = tmp
+        sol2 = tmp_sol
+
     make_csv("ga_solution.csv", tmp_sol)
     print(tmp)
