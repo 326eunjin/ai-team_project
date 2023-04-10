@@ -21,6 +21,7 @@ with open('./2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as ts
 
 def greedy():
     i = 0
+    order = 0
     # i가 지금 도시
     # j가 앞으로 갈 도시
     while len(visited_cities) < 1000:
@@ -42,7 +43,8 @@ def greedy():
                 # argmin은 앞으로 갈 도시 중 가장 가까운 도시
         i = argmin
         visited_cities.add(i)
-        sol.append(i)
+        sol[order] = i
+        order += 1
 
     f = open('greedy_solution.csv', 'w')
 

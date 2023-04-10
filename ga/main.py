@@ -51,7 +51,7 @@ def cal_total_cost(sol):
 if __name__ == '__main__':
     # ga_sol 여러번 돌리기
     min_td = float("inf")
-    for i in range(100):
+    for i in range(1000):
         tmp_sol = ga_sol.ga_sol(adj)
         tmp = cal_total_cost(tmp_sol)
         if min_td >= tmp:
