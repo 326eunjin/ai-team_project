@@ -70,17 +70,19 @@ def cal_total_cost(sol):
 
 # main function
 if __name__ == '__main__':
+    sol = []
     min_td = float("inf")
     # ga_sol 여러번 돌리기
     for i in range(500):
-        sol1 = ga_sol.ga_sol(ga_list.make_adj_list(sol1, sol2))
+        sol1 = ga.ga_sol(ga_list.make_adj_list(sol1, sol2))
         tmp = cal_total_cost(sol1)
-        if min_td >= tmp:
+        if min_td > tmp:
             min_td = tmp
-        sol2 = ga_sol.ga_sol(ga_list.make_adj_list(sol1, sol2))
+            sol = sol1
+        sol2 = ga.ga_sol(ga_list.make_adj_list(sol1, sol2))
         tmp = cal_total_cost(sol2)
-        if min_td >= tmp:
+        if min_td > tmp:
             min_td = tmp
-
-    make_csv("ga_solution.csv", sol2)
-    print(tmp)
+            sol = sol2
+    make_csv("ga_solution.csv", sol)
+    print(min_td)
