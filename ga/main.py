@@ -8,6 +8,7 @@ cities = []
 sol1 = [0 for _ in range(1001)]
 sol2 = [0 for _ in range(1001)]
 
+# with open('./../example_solution.csv', mode='r', newline='') as solution:
 with open('./../example_solution.csv', mode='r', newline='') as solution:
 
     order = 0
@@ -70,21 +71,22 @@ def cal_total_cost(sol):
 if __name__ == '__main__':
     sol = []
     ga = gl.Ga_sol(sol1, sol2)
-    for _ in range(1):
+    for _ in range(100):     # GA algorithm
         super_child1 = ga.ga_sol()
         super_child2 = ga.ga_sol()
         child1_tc = cal_total_cost(super_child1)
         child2_tc = cal_total_cost(super_child2)
         # ga_sol 여러번 돌리기
-        for _ in range(10):
+        for _ in range(10):    # 자식 pool 만들기
             tmp_sol = ga.ga_sol()
             tmp_tc = cal_total_cost(tmp_sol)
-            if child1_tc > tmp_tc:          # 가장 우수한 자식쌍 유지
-                super_child1 = tmp_sol
-                child1_tc = tmp_tc
-            elif child2_tc > tmp_tc:
-                super_child2 = tmp_sol
-                child2_tc = tmp_tc
+            if (child1_tc > tmp_tc) | (child2_tc > tmp_tc):          # 가장 우수한 자식쌍 유지
+                if child1_tc > child2_tc:
+                    super_child1 = tmp_sol
+                    child1_tc = tmp_tc
+                else:
+                    super_child2 = tmp_sol
+                    child2_tc = tmp_tc
         ga.generation_change(super_child1, super_child2)
     sol = (super_child1 if child1_tc > child2_tc else super_child2)
     make_csv("ga_solution.csv", sol)
