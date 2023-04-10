@@ -1,12 +1,13 @@
 import csv
 import numpy as np
-import ga_sol as gl
+import ga_list
+import ga_sol
 
 # given cities
 cities = []
 # sol1ution
-sol1 = [0 for _ in range(1001)]
-sol2 = [0 for _ in range(1001)]
+sol1 = [0 for _ in range(1000)]
+sol2 = [0 for _ in range(1000)]
 
 with open('./../example_solution.csv', mode='r', newline='') as solution:
 
@@ -14,7 +15,7 @@ with open('./../example_solution.csv', mode='r', newline='') as solution:
     # read sol1ution sequence
     reader = csv.reader(solution)
     for row in reader:
-        sol1[order] = int(row[0])
+        sol1[int(row[0])] = order
         order += 1
 
 # need to change this file into new csv sol2
@@ -24,7 +25,7 @@ with open('./../greedy_solution.csv', mode='r', newline='') as solution:
     # read sol1ution sequence
     reader = csv.reader(solution)
     for row in reader:
-        sol2[order] = int(row[0])
+        sol2[int(row[0])] = order
         order += 1
 
 # get TSP city map
@@ -55,7 +56,8 @@ def cal_total_cost(sol):
     for idx in range(len(sol)-1):
         # get city positions
         pos_city_1 = [float(cities[sol[idx]][0]), float(cities[sol[idx]][1])]
-        pos_city_2 = [float(cities[sol[idx+1]][0]), float(cities[sol[idx+1]][1])]
+        pos_city_2 = [float(cities[sol[idx+1]][0]),
+                      float(cities[sol[idx+1]][1])]
 
     # distance calculation
         dist = distance(pos_city_1, pos_city_2)
@@ -69,23 +71,18 @@ def cal_total_cost(sol):
 # main function
 if __name__ == '__main__':
     sol = []
-    ga = gl.Ga_sol(sol1, sol2)
-    for _ in range(1):
-        super_child1 = ga.ga_sol()
-        super_child2 = ga.ga_sol()
-        child1_tc = cal_total_cost(super_child1)
-        child2_tc = cal_total_cost(super_child2)
-        # ga_sol 여러번 돌리기
-        for _ in range(10):
-            tmp_sol = ga.ga_sol()
-            tmp_tc = cal_total_cost(tmp_sol)
-            if child1_tc > tmp_tc:          # 가장 우수한 자식쌍 유지
-                super_child1 = tmp_sol
-                child1_tc = tmp_tc
-            elif child2_tc > tmp_tc:
-                super_child2 = tmp_sol
-                child2_tc = tmp_tc
-        ga.generation_change(super_child1, super_child2)
-    sol = (super_child1 if child1_tc > child2_tc else super_child2)
+    min_td = float("inf")
+    # ga_sol 여러번 돌리기
+    for i in range(500):
+        sol1 = ga_sol(ga_list.make_adj_list(sol1, sol2))
+        tmp = cal_total_cost(sol1)
+        if min_td > tmp:
+            min_td = tmp
+            sol = sol1
+        sol2 = ga_sol(ga_list.make_adj_list(sol1, sol2))
+        tmp = cal_total_cost(sol2)
+        if min_td > tmp:
+            min_td = tmp
+            sol = sol2
     make_csv("ga_solution.csv", sol)
-    print(cal_total_cost(sol))
+    print(min_td)
