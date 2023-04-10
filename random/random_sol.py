@@ -13,7 +13,7 @@ def distance(x, y):
 
 
 # get TSP city map
-with open('2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
+with open('../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
     # read TSP city map
     reader = csv.reader(tsp)
     for row in reader:
@@ -52,7 +52,7 @@ def find_final_cost():
         sol.append(int(0))
         cost = cost_calc(sol)
 
-        if(final_cost > cost):
+        if (final_cost > cost):
             final_cost = cost
             f = open('random_solution.csv', 'w')
             # write each element of sol to the csv file
