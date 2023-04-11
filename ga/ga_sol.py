@@ -13,10 +13,10 @@ class Ga_sol:
         adjacency_list = [0 for _ in range(1000)]
         for i in range(1000):
             tmp_set = set()
-            tmp_set.add(self.sol1[i-1])
-            tmp_set.add(self.sol1[i+1])
-            tmp_set.add(self.sol2[i-1])
-            tmp_set.add(self.sol2[i+1])
+            tmp_set.add(self.sol1[(i+999) % 1000])
+            tmp_set.add(self.sol2[(i+999) % 1000])
+            tmp_set.add(self.sol1[(i+1) % 1000])
+            tmp_set.add(self.sol2[(i+1) % 1000])
             adjacency_list[i] = list(tmp_set)
         return adjacency_list
 
@@ -30,7 +30,6 @@ class Ga_sol:
 
         visited_cities.add(visit)
         # visit all cities
-        sol[0] = 0
         while len(visited_cities) < 1000:
             rd.shuffle(adj[visit])
             for i in range(len(adj[visit])):
@@ -40,6 +39,6 @@ class Ga_sol:
                     sol[order] = visit                  # record the order of city
                     visited_cities.add(visit)
                     break
-            if i == len(adj[visit]) - 1:
-                visit = adj[visit][i]
+                elif i == len(adj[visit]) - 1:
+                    visit = adj[visit][i]
         return sol
