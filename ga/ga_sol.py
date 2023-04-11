@@ -13,10 +13,10 @@ class Ga_sol:
         adjacency_list = [0 for _ in range(1000)]
         for i in range(1000):
             tmp_set = set()
-            tmp_set.add(self.sol1[(i+999) % 1000])
-            tmp_set.add(self.sol2[(i+999) % 1000])
-            tmp_set.add(self.sol1[(i+1) % 1000])
-            tmp_set.add(self.sol2[(i+1) % 1000])
+            tmp_set.add(self.sol1[(self.sol1.index(i)+999) % 1000])
+            tmp_set.add(self.sol2[(self.sol2.index(i)+999) % 1000])
+            tmp_set.add(self.sol1[(self.sol1.index(i)+1) % 1000])
+            tmp_set.add(self.sol2[(self.sol2.index(i)+1) % 1000])
             adjacency_list[i] = list(tmp_set)
         return adjacency_list
 
