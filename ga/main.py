@@ -69,7 +69,7 @@ def cal_total_cost(sol):
 # main function
 if __name__ == '__main__':
     sol = []
-    ga = gl.Ga_sol(sol1, sol2, cities)
+    ga = gl.Ga_sol(sol1, sol2)
     for _ in range(100):     # GA algorithm
         super_child1 = ga.ga_sol()
         super_child2 = ga.ga_sol()
