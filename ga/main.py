@@ -8,7 +8,7 @@ cities = []
 sol1 = [0 for _ in range(1001)]
 sol2 = [0 for _ in range(1001)]
 
-# with open('./../example_solution.csv', mode='r', newline='') as solution:
+# need to change this file into new csv sol1
 with open('./../example_solution.csv', mode='r', newline='') as solution:
 
     order = 0
@@ -64,13 +64,12 @@ def cal_total_cost(sol):
     # accumulation
         total_cost += dist
     return total_cost
-    # print('final cost: '+str(total_cost))
 
 
 # main function
 if __name__ == '__main__':
     sol = []
-    ga = gl.Ga_sol(sol1, sol2)
+    ga = gl.Ga_sol(sol1, sol2, cities)
     for _ in range(100):     # GA algorithm
         super_child1 = ga.ga_sol()
         super_child2 = ga.ga_sol()
