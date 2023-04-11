@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import csv
-from matplotlib.animation import FuncAnimation
+import matplotlib.animation as animation
 
 
 class Visualization:
@@ -10,6 +10,8 @@ class Visualization:
 
         self.__x = []
         self.__y = []
+        self.paused = False
+        self.animation = None
 
     def __order(self):
         new_cities = []
@@ -17,10 +19,9 @@ class Visualization:
             new_cities.append(cities[self.sol[idx]])
         return new_cities
 
-    def visualize(self):
+    def show(self):
         x = []
         y = []
-
         ordered_cities = self.__order()
 
         for citi in ordered_cities:
@@ -35,7 +36,8 @@ class Visualization:
                         markerfacecolor='red', markeredgecolor='red')
         line.set_linewidth(0.3)
         # Add a title and axis labels
-        ax.set_title('Travelling salesman problem')
+        ax.set_title(
+            'Travelling salesman problem - Click to pause/resume the animation')
         ax.set_xlabel('Horizontal')
         ax.set_ylabel('Vertical')
 
@@ -43,8 +45,11 @@ class Visualization:
         ax.set_xlim([0, 100])
         ax.set_ylim([0, 100])
 
-        anim = FuncAnimation(fig, self.animate, len(x), fargs=[
-                             x, y, line], interval=1, blit=True)
+        self.animation = animation.FuncAnimation(fig, self.animate, len(x), fargs=[
+            x, y, line], interval=100, blit=True)
+
+        # Pause / Resume
+        fig.canvas.mpl_connect('button_press_event', self.toggle_pause)
         # Save file
         # anim.save('visualization.gif')
         # plt.savefig('visualization.pdf')
@@ -58,6 +63,13 @@ class Visualization:
 
         # Return the line object
         return line,
+
+    def toggle_pause(self, *args, **kwargs):
+        if self.paused:
+            self.animation.resume()
+        else:
+            self.animation.pause()
+        self.paused = not self.paused
 
 
 cities = []
@@ -89,5 +101,5 @@ with open('greedy_solution.csv', mode='r', newline='') as solution:
     sol.append(int(0))
 
 # Usage
-temp = Visualization(cities, sol)
-temp.visualize()
+visual = Visualization(cities, sol)
+visual.show()
