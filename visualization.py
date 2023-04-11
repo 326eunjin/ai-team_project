@@ -8,8 +8,6 @@ class Visualization:
         self.cities = cities
         self.sol = sol
 
-        self.__x = []
-        self.__y = []
         self.paused = False
         self.animation = None
 
@@ -45,22 +43,20 @@ class Visualization:
         ax.set_xlim([0, 100])
         ax.set_ylim([0, 100])
 
-        self.animation = animation.FuncAnimation(fig, self.animate, len(x), fargs=[
-            x, y, line], interval=100, blit=True)
+        self.animation = animation.FuncAnimation(fig, self.animate, frames=len(x), fargs=[
+            x, y, line], interval=1, blit=True, repeat=False)
 
         # Pause / Resume
         fig.canvas.mpl_connect('button_press_event', self.toggle_pause)
         # Save file
-        # anim.save('visualization.gif')
-        # plt.savefig('visualization.pdf')
+        self.animation.save('visualization.gif')
         plt.show()
+        plt.savefig('visualization.png')
 
     def animate(self, i, x, y, line):
-        self.__x.append(x[i])
-        self.__y.append(y[i])
+        print(i)
         # Get the x and y data for the line up to the ith point
-        line.set_data(self.__x, self.__y)
-
+        line.set_data(x[:i], y[:i])
         # Return the line object
         return line,
 
