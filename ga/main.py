@@ -70,13 +70,11 @@ def cal_total_cost(sol):
 if __name__ == '__main__':
     sol = []
     ga = gl.Ga_sol(sol1, sol2)
-    for _ in range(100):     # GA algorithm
-        super_child1 = ga.ga_sol()
-        super_child2 = ga.ga_sol()
-        child1_tc = cal_total_cost(super_child1)
-        child2_tc = cal_total_cost(super_child2)
+    for _ in range(100):        # GA algorithm
+        child1_tc = float("inf")
+        child2_tc = float("inf")
         # ga_sol 여러번 돌리기
-        for _ in range(10):    # 자식 pool 만들기
+        for _ in range(10):     # 자식 pool 만들기 (range >= 2)
             tmp_sol = ga.ga_sol()
             tmp_tc = cal_total_cost(tmp_sol)
             if (child1_tc > tmp_tc) | (child2_tc > tmp_tc):          # 가장 우수한 자식쌍 유지
