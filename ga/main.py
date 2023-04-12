@@ -52,7 +52,7 @@ class Ga_sol:
 
 class Main:
 # given cities
-    def __init__(self, sol1, sol2):
+    def __init__(self):
         self.cities = []
 # sol1ution
         self.sol1 = [0 for _ in range(1001)]
@@ -86,28 +86,28 @@ class Main:
 
         # Euclidean distance measuring function
 
-        def make_csv(path, sol):
-            f = open(path, 'w')
-            # write each element of sol to the csv file
-            for i in sol:
-                f.write(str(i) + '\n')
+    def make_csv(self, path, sol):
+        f = open(path, 'w')
+        # write each element of sol to the csv file
+        for i in sol:
+            f.write(str(i) + '\n')
 
 
-        def cal_total_cost(sol):
-            # evaluate solution cost
-            total_cost = 0
-            for idx in range(len(sol)-1):
-                # get city positions
-                pos_city_1 = [float(self.cities[sol[idx]][0]), float(self.cities[sol[idx]][1])]
-                pos_city_2 = [float(self.cities[sol[idx+1]][0]), float(self.cities[sol[idx+1]][1])]
+    def cal_total_cost(self, sol):
+        # evaluate solution cost
+        total_cost = 0
+        for idx in range(len(sol)-1):
+            # get city positions
+            pos_city_1 = [float(self.cities[sol[idx]][0]), float(self.cities[sol[idx]][1])]
+            pos_city_2 = [float(self.cities[sol[idx+1]][0]), float(self.cities[sol[idx+1]][1])]
 
-            # distance calculation
-                dist = distance(pos_city_1, pos_city_2)
+        # distance calculation
+            dist = distance(pos_city_1, pos_city_2)
 
-            # accumulation
-                total_cost += dist
-            return total_cost
-            # print('final cost: '+str(total_cost))        
+        # accumulation
+            total_cost += dist
+        return total_cost
+        # print('final cost: '+str(total_cost))        
 
 # main function
 if __name__ == '__main__':
