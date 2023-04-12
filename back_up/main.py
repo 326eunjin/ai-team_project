@@ -1,7 +1,7 @@
 import random as rd
 import csv
 import numpy as np
-import ga_sol as gl
+# import ga_sol as gl
 
 # given cities
 cities = []
@@ -10,7 +10,7 @@ sol1 = [0 for _ in range(1001)]
 sol2 = [0 for _ in range(1001)]
 
 # need to change this file into new csv sol1
-with open('./../example_solution.csv', mode='r', newline='') as solution:
+with open('/Users/tuandanh/Desktop/Soongsil_3-1/Ai/ai-team_project/example_solution.csv', mode='r', newline='') as solution:
 
     order = 0
     # read sol1ution sequence
@@ -20,7 +20,7 @@ with open('./../example_solution.csv', mode='r', newline='') as solution:
         order += 1
 
 # need to change this file into new csv sol2
-with open('./../random/random_solution.csv', mode='r', newline='') as solution:
+with open('/Users/tuandanh/Desktop/Soongsil_3-1/Ai/ai-team_project/random/random_solution.csv', mode='r', newline='') as solution:
 
     order = 0
     # read sol1ution sequence
@@ -30,7 +30,7 @@ with open('./../random/random_solution.csv', mode='r', newline='') as solution:
         order += 1
 
 # get TSP city map
-with open('./../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
+with open('/Users/tuandanh/Desktop/Soongsil_3-1/Ai/ai-team_project/2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
     # read TSP city map
     reader = csv.reader(tsp)
     for row in reader:
@@ -102,7 +102,10 @@ class Ga_sol:
         if len(self.visited_cities) < 999:
             adj = self.make_adj_list()
         else:
-            adj = list(self.visited_cities - set([i for i in range(1000)]))
+            adj = [[]for _ in range(1000)]
+            last = list(set([i for i in range(1000)]) - self.visited_cities)[0]
+            # adj[last] =
+            # 여기!
         # visited_cities = set()      # the set of visited cities
         visit = 0                   # current city (start at 0)
         order = 0
@@ -110,24 +113,32 @@ class Ga_sol:
         self.visited_cities.add(visit)
         self.centroid = self.update_centroid(visit)
 
-        sol = [0 for _ in range(1001)]
+        sol = []
+        # i = 0
         # visit all cities
+        self.visited_cities = set()
         while len(self.visited_cities) < 1000:
             # rd.shuffle(adj[visit])
             adj[visit] = self.heuristic(adj, visit)
             for i in range(len(adj[visit])):
                 if adj[visit][i] not in self.visited_cities:
                     visit = adj[visit][i]               # visit next city
-                    order += 1
+                    # order += 1
                     # record the order of city
-                    sol[order] = visit
+                    # sol[order] = visit
+                    sol.append(visit)
                     self.visited_cities.add(visit)
                     self.centroid = self.update_centroid(visit)
                     break
                 elif i == len(adj[visit]) - 1:
                     visit = adj[visit][rd.choice(range(len(adj[visit])))]
-            # if len(self.visited_cities) == 1000:
-        print(sol)
+            # print(str(i))
+            # i += 1
+                if len(self.visited_cities) == 1000:
+                    print(len(sol))
+        sol.append(int(0))
+        # print(len(sol))
+        # print(str(sol)+"hi")
         return sol
 
     def update_centroid(self, visit):
@@ -138,17 +149,19 @@ class Ga_sol:
 
     def heuristic(self, adj, visit):
         centroid = self.update_centroid(visit)
-        return sorted(adj[visit], key=lambda x:
-                      distance([float(cities[x][0]), float(cities[x][1])],
-                               [float(centroid[0]), float(centroid[0])])
-                      / distance([float(cities[0][0]), float(cities[0][1])],
-                                 [float(centroid[0]), float(centroid[1])]))
+        tmp = sorted(adj[visit], key=lambda x:
+                     distance([float(cities[x][0]), float(cities[x][1])],
+                              [float(centroid[0]), float(centroid[0])])
+                     / distance([float(cities[0][0]), float(cities[0][1])],
+                                [float(centroid[0]), float(centroid[1])]))
+        return tmp
 
 
 # main function
 if __name__ == '__main__':
     print(cal_total_cost(sol1))
     print(cal_total_cost(sol2))
+    tmp_sol = []
     sol = []
     ga = Ga_sol(sol1, sol2, cities)
     super_child1 = sol1
@@ -169,6 +182,6 @@ if __name__ == '__main__':
                     super_child2 = tmp_sol
                     child2_tc = tmp_tc
         ga.generation_change(super_child1, super_child2)
-    sol = (super_child1 if child1_tc < child2_tc else super_child2)
+        sol = (super_child1 if child1_tc < child2_tc else super_child2)
     make_csv("ga_solution.csv", sol)
     print(cal_total_cost(sol))
