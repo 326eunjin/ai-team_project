@@ -49,12 +49,12 @@ class Visualization:
         # Pause / Resume
         fig.canvas.mpl_connect('button_press_event', self.toggle_pause)
         # Save file
-        self.animation.save('visualization.gif')
+        # self.animation.save('visualization.gif')
         plt.show()
-        plt.savefig('visualization.png')
+        # plt.savefig('visualization.png')
 
     def animate(self, i, x, y, line):
-        print(i)
+        # print(i)
         # Get the x and y data for the line up to the ith point
         line.set_data(x[:i], y[:i])
         # Return the line object
@@ -78,7 +78,7 @@ with open('2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
 
 sol = []
 # 1. get solution sequence and reordering (sort from 0)
-with open('greedy_solution.csv', mode='r', newline='') as solution:
+with open('example_solution.csv', mode='r', newline='') as solution:
 
     # read solution sequence
     reader = csv.reader(solution)
