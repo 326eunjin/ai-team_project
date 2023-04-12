@@ -44,6 +44,7 @@ def distance(x, y):
 
 
 def make_csv(path, sol):
+    sol = sol[:1000]
     f = open(path, 'w')
     # write each element of sol to the csv file
     for i in sol:
@@ -74,11 +75,12 @@ if __name__ == '__main__':
     ga = gl.Ga_sol(sol1, sol2)
     super_child1 = sol1
     super_child2 = sol2
-    for _ in range(2):        # GA algorithm
+    for _ in range(1000):        # GA algorithm
+        #세대교체
         child1_tc = cal_total_cost(sol1)
         child2_tc = cal_total_cost(sol2)
         # ga_sol 여러번 돌리기
-        for _ in range(1000):     # 자식 pool 만들기 (range >= 2)
+        for _ in range(100):     # 자식 pool 만들기 (range >= 2)
             tmp_sol = ga.ga_sol()
             tmp_tc = cal_total_cost(tmp_sol)
             if (child1_tc > tmp_tc) | (child2_tc > tmp_tc):          # 가장 우수한 자식쌍 유지
