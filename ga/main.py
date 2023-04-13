@@ -122,8 +122,8 @@ if __name__ == '__main__':
     main = Main()
     ga = Ga_sol(main.sol1, main.sol2)
     for _ in range(100):     # GA algorithm
-        super_child1 = ga.ga_sol()
-        super_child2 = ga.ga_sol()
+        super_child1 = ga.sol1
+        super_child2 = ga.sol2
         child1_tc = main.cal_total_cost(super_child1)
         child2_tc = main.cal_total_cost(super_child2)
         # ga_sol 여러번 돌리기
