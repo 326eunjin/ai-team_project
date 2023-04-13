@@ -156,14 +156,14 @@ class Ga_sol:
 # main function
 if __name__ == '__main__':
     main = Main()
-    print(main.cal_total_cost(main.sol1))
-    print(main.cal_total_cost(main.sol2))
+    # print(main.cal_total_cost(main.sol1))
+    # print(main.cal_total_cost(main.sol2))
     tmp_sol = []
     sol = []
     ga = Ga_sol(main.sol1, main.sol2, main.cities)
     super_child1 = main.sol1
     super_child2 = main.sol2
-    for _ in range(50):        # GA algorithm
+    for _ in range(100):        # GA algorithm
         # 세대교체
         child1_tc = main.cal_total_cost(main.sol1)
         child2_tc = main.cal_total_cost(main.sol2)
