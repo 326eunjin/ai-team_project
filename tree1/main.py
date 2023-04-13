@@ -147,5 +147,6 @@ if __name__ == '__main__':
                     child2_tc = tmp_tc
         ga.generation_change(super_child1, super_child2)
     sol = (super_child1 if child1_tc < child2_tc else super_child2)
+    sol = sol[:1000]
     main.make_csv("ga_solution.csv", sol)
     print(main.cal_total_cost(sol))
