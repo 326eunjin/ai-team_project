@@ -75,6 +75,7 @@ class Ga_sol:
     def __init__(self, sol1, sol2, cities):
         self.sol1 = sol1
         self.sol2 = sol2
+        self.adj = self.make_adj_list()
         self.cities = cities
         self.visited_cities = set()
         self.centroid = [0, 0]
@@ -87,6 +88,7 @@ class Ga_sol:
     def generation_change(self, super_child1, super_child2):   # 세대 교체 메소드
         self.sol1 = super_child1
         self.sol2 = super_child2
+        self.adj = self.make_adj_list()
 
     def make_adj_list(self):
         adjacency_list = [0 for _ in range(1000)]
@@ -101,7 +103,6 @@ class Ga_sol:
 
     # GA Algorithm Solution
     def ga_sol(self):
-        adj = self.make_adj_list()
         visit = 0                   # current city (start at 0)
         order = 0
 
@@ -112,17 +113,18 @@ class Ga_sol:
         # visit all cities
         self.visited_cities = set()
         while len(self.visited_cities) < 1000:
-            adj[visit] = self.heuristic(adj, visit)
-            for i in range(len(adj[visit])):
-                if adj[visit][i] not in self.visited_cities:
-                    visit = adj[visit][i]   # visit next city
+            self.adj[visit] = self.heuristic(self.adj, visit)
+            for i in range(len(self.adj[visit])):
+                if self.adj[visit][i] not in self.visited_cities:
+                    visit = self.adj[visit][i]   # visit next city
                     order += 1
                     sol[order] = visit  # record the order of city
                     self.visited_cities.add(visit)
                     self.centroid = self.update_centroid(visit)
                     break
-                elif i == len(adj[visit]) - 1:
-                    visit = adj[visit][rd.choice(range(len(adj[visit])))]
+                elif i == len(self.adj[visit]) - 1:
+                    visit = self.adj[visit][rd.choice(
+                        range(len(self.adj[visit])))]
             # 마지막 남은 도시 탐색
             if len(self.visited_cities) == 999:
                 visit = (set(list(range(1000))) - self.visited_cities).pop()
@@ -161,7 +163,7 @@ if __name__ == '__main__':
     ga = Ga_sol(main.sol1, main.sol2, main.cities)
     super_child1 = main.sol1
     super_child2 = main.sol2
-    for _ in range(10):        # GA algorithm
+    for _ in range(50):        # GA algorithm
         # 세대교체
         child1_tc = main.cal_total_cost(main.sol1)
         child2_tc = main.cal_total_cost(main.sol2)

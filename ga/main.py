@@ -7,14 +7,18 @@ def distance(x, y):
     dist = np.linalg.norm(np.array(x) - np.array(y))
     return dist
 
+
 class Ga_sol:
     def __init__(self, sol1, sol2):
         self.sol1 = sol1
         self.sol2 = sol2
-    
+        self.adj = self.make_adj_list()
+        self.visited_cities = set()
+
     def generation_change(self, super_child1, super_child2):   # 세대 교체 메소드
         self.sol1 = super_child1
         self.sol2 = super_child2
+        self.adj = self.make_adj_list()
 
     def make_adj_list(self):
         adjacency_list = [0 for _ in range(1000)]
@@ -30,28 +34,29 @@ class Ga_sol:
     # GA Algorithm Solution
     def ga_sol(self):
         sol = [0 for _ in range(1001)]
-        adj = self.make_adj_list()
-        visited_cities = set()      # the set of visited cities
         visit = 0                   # current city (start at 0)
         order = 0
 
-        visited_cities.add(visit)
+        self.visited_cities = set()
+        self.visited_cities.add(visit)
         # visit all cities
-        while len(visited_cities) < 1000:
-            rd.shuffle(adj[visit])
-            for i in range(len(adj[visit])):
-                if adj[visit][i] not in visited_cities:
-                    visit = adj[visit][i]               # visit next city
+        while len(self.visited_cities) < 1000:
+            rd.shuffle(self.adj[visit])
+            for i in range(len(self.adj[visit])):
+                if self.adj[visit][i] not in self.visited_cities:
+                    visit = self.adj[visit][i]               # visit next city
                     order += 1
-                    sol[order] = visit                  # record the order of city
-                    visited_cities.add(visit)
+                    # record the order of city
+                    sol[order] = visit
+                    self.visited_cities.add(visit)
                     break
-                elif i == len(adj[visit]) - 1:
-                    visit = adj[visit][i]
+                elif i == len(self.adj[visit]) - 1:
+                    visit = self.adj[visit][i]
         return sol
 
+
 class Main:
-# given cities
+    # given cities
     def __init__(self):
         self.cities = []
 # sol1ution
@@ -68,7 +73,7 @@ class Main:
                 order += 1
 
     # need to change this file into new csv sol2
-        with open('./../greedy_solution.csv', mode='r', newline='') as solution:
+        with open('./../random/random_solution.csv', mode='r', newline='') as solution:
 
             order = 0
             # read sol1ution sequence
@@ -92,14 +97,15 @@ class Main:
         for i in sol:
             f.write(str(i) + '\n')
 
-
     def cal_total_cost(self, sol):
         # evaluate solution cost
         total_cost = 0
         for idx in range(len(sol)-1):
             # get city positions
-            pos_city_1 = [float(self.cities[sol[idx]][0]), float(self.cities[sol[idx]][1])]
-            pos_city_2 = [float(self.cities[sol[idx+1]][0]), float(self.cities[sol[idx+1]][1])]
+            pos_city_1 = [float(self.cities[sol[idx]][0]),
+                          float(self.cities[sol[idx]][1])]
+            pos_city_2 = [float(self.cities[sol[idx+1]][0]),
+                          float(self.cities[sol[idx+1]][1])]
 
         # distance calculation
             dist = distance(pos_city_1, pos_city_2)
@@ -107,7 +113,8 @@ class Main:
         # accumulation
             total_cost += dist
         return total_cost
-        # print('final cost: '+str(total_cost))        
+        # print('final cost: '+str(total_cost))
+
 
 # main function
 if __name__ == '__main__':
