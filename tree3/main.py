@@ -140,7 +140,7 @@ class Ga_sol:
     # heuristic 정렬 기준 (시작점, 무게중심 거리비)
     def sort_by(self, city1, city2):
         dist1 = distance([float(city1[0]), float(city1[1])],
-                         [float(city2[0]), float(city2[0])])
+                         [float(city2[0]), float(city2[1])])
         dist2 = distance([float(city1[0]), float(city1[1])],
                          [float(city2[0]), float(city2[1])])
         return dist1 / dist2 if dist2 != 0 else float("inf")
