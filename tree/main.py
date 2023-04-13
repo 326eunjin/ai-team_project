@@ -45,7 +45,7 @@ class Ga_sol:
                     visit = adj[visit][i]
         return sol
 
-class main:
+class Main:
     def __init__(self):
     # given cities
         self.cities = []
@@ -111,34 +111,6 @@ class main:
         # accumulation
             total_cost += dist
         return total_cost
-
-
-    # # main function
-    # if __name__ == '__main__':
-    #     print(cal_total_cost(sol1))
-    #     print(cal_total_cost(sol2))
-    #     sol = []
-    #     ga = Ga_sol(sol1, sol2)
-    #     super_child1 = sol1
-    #     super_child2 = sol2
-    #     for _ in range(2):        # GA algorithm
-    #         child1_tc = cal_total_cost(sol1)
-    #         child2_tc = cal_total_cost(sol2)
-    #         # ga_sol 여러번 돌리기
-    #         for _ in range(1000):     # 자식 pool 만들기 (range >= 2)
-    #             tmp_sol = ga.ga_sol()
-    #             tmp_tc = cal_total_cost(tmp_sol)
-    #             if (child1_tc > tmp_tc) | (child2_tc > tmp_tc):          # 가장 우수한 자식쌍 유지
-    #                 if child1_tc > child2_tc:
-    #                     super_child1 = tmp_sol
-    #                     child1_tc = tmp_tc
-    #                 else:
-    #                     super_child2 = tmp_sol
-    #                     child2_tc = tmp_tc
-    #         ga.generation_change(super_child1, super_child2)
-    #     sol = (super_child1 if child1_tc < child2_tc else super_child2)
-    #     make_csv("ga_solution.csv", sol)
-    #     print(cal_total_cost(sol))
 
     def cal_four_points(self, x, y):
 
@@ -231,3 +203,11 @@ class main:
 
 
     make_tree()
+
+# # main function
+if __name__ == '__main__':
+    sol = []
+    main = Main()
+    main.make_tree()
+    main.make_csv("ga_solution.csv", sol)
+    print(main.cal_total_cost(sol))
