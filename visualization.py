@@ -15,6 +15,7 @@ class Visualization:
         new_cities = []
         for idx in range(len(cities)):
             new_cities.append(cities[self.sol[idx]])
+        new_cities.append(cities[0])
         return new_cities
 
     def show(self):
@@ -22,9 +23,10 @@ class Visualization:
         y = []
         ordered_cities = self.__order()
 
-        for citi in ordered_cities:
-            x.append(float(citi[0]))
-            y.append(float(citi[1]))
+        for city in ordered_cities:
+            x.append(float(city[0]))
+            y.append(float(city[1]))
+        # print(x)
 
         # Create a figure object and add a subplot
         fig, ax = plt.subplots()
@@ -43,20 +45,21 @@ class Visualization:
         ax.set_xlim([0, 100])
         ax.set_ylim([0, 100])
 
-        self.animation = animation.FuncAnimation(fig, self.animate, frames=len(x), fargs=[
-            x, y, line], interval=1, blit=True, repeat=False)
+        self.animation = animation.FuncAnimation(fig, self.animate, frames=len(x)+1,
+                                                 fargs=[x, y, line], interval=1, blit=False, repeat=False)
 
-        # Pause / Resume
-        fig.canvas.mpl_connect('button_press_event', self.toggle_pause)
-        # Save file
+        # # Pause / Resume
+        # fig.canvas.mpl_connect('button_press_event', self.toggle_pause)
+        # # Save file
         # self.animation.save('visualization.gif')
-        plt.show()
         # plt.savefig('visualization.png')
+        plt.show()
 
     def animate(self, i, x, y, line):
-        # print(i)
+        print(i)
         # Get the x and y data for the line up to the ith point
         line.set_data(x[:i], y[:i])
+
         # Return the line object
         return line,
 
@@ -78,7 +81,7 @@ with open('2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
 
 sol = []
 # 1. get solution sequence and reordering (sort from 0)
-with open('ga/ga_solution.csv', mode='r', newline='') as solution:
+with open('./greedy_solution.csv', mode='r', newline='') as solution:
 
     # read solution sequence
     reader = csv.reader(solution)
