@@ -10,7 +10,7 @@ sol1 = [0 for _ in range(1001)]
 sol2 = [0 for _ in range(1001)]
 
 # need to change this file into new csv sol1
-with open('/Users/tuandanh/Desktop/Soongsil_3-1/Ai/ai-team_project/example_solution.csv', mode='r', newline='') as solution:
+with open('../example_solution.csv', mode='r', newline='') as solution:
 
     order = 0
     # read sol1ution sequence
@@ -20,7 +20,7 @@ with open('/Users/tuandanh/Desktop/Soongsil_3-1/Ai/ai-team_project/example_solut
         order += 1
 
 # need to change this file into new csv sol2
-with open('/Users/tuandanh/Desktop/Soongsil_3-1/Ai/ai-team_project/random/random_solution.csv', mode='r', newline='') as solution:
+with open('../random/random_solution.csv', mode='r', newline='') as solution:
 
     order = 0
     # read sol1ution sequence
@@ -30,7 +30,7 @@ with open('/Users/tuandanh/Desktop/Soongsil_3-1/Ai/ai-team_project/random/random
         order += 1
 
 # get TSP city map
-with open('/Users/tuandanh/Desktop/Soongsil_3-1/Ai/ai-team_project/2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
+with open('../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
     # read TSP city map
     reader = csv.reader(tsp)
     for row in reader:
@@ -99,62 +99,55 @@ class Ga_sol:
 
     # GA Algorithm Solution
     def ga_sol(self):
-        if len(self.visited_cities) < 999:
-            adj = self.make_adj_list()
-        else:
-            adj = [[]for _ in range(1000)]
-            last = list(set([i for i in range(1000)]) - self.visited_cities)[0]
-            # adj[last] =
-            # 여기!
-        # visited_cities = set()      # the set of visited cities
+        adj = self.make_adj_list()
         visit = 0                   # current city (start at 0)
         order = 0
 
         self.visited_cities.add(visit)
         self.centroid = self.update_centroid(visit)
 
-        sol = []
-        # i = 0
+        sol = [0 for _ in range(1001)]
         # visit all cities
         self.visited_cities = set()
         while len(self.visited_cities) < 1000:
-            # rd.shuffle(adj[visit])
             adj[visit] = self.heuristic(adj, visit)
             for i in range(len(adj[visit])):
                 if adj[visit][i] not in self.visited_cities:
-                    visit = adj[visit][i]               # visit next city
-                    # order += 1
-                    # record the order of city
-                    # sol[order] = visit
-                    sol.append(visit)
+                    visit = adj[visit][i]   # visit next city
+                    order += 1
+                    sol[order] = visit  # record the order of city
                     self.visited_cities.add(visit)
                     self.centroid = self.update_centroid(visit)
                     break
                 elif i == len(adj[visit]) - 1:
                     visit = adj[visit][rd.choice(range(len(adj[visit])))]
-            # print(str(i))
-            # i += 1
-                if len(self.visited_cities) == 1000:
-                    print(len(sol))
+            if len(self.visited_cities) == 999:
+                # 마지막 남은 도시 탐색
+                visit = (set(list(range(1000))) - self.visited_cities).pop()
+                sol.append(visit)
+                self.visited_cities.add(visit)
         sol.append(int(0))
-        # print(len(sol))
-        # print(str(sol)+"hi")
         return sol
 
+    # centroid 업데이트
     def update_centroid(self, visit):
         if len(self.visited_cities) == 999:
             return [0, 0]
         return [((float(self.centroid[0]) * (1000 - len(self.visited_cities))) - float(cities[visit][0]))/(999 - len(self.visited_cities)),
                 ((float(self.centroid[1]) * (1000 - len(self.visited_cities))) - float(cities[visit][1]))/(999 - len(self.visited_cities))]
 
+    # heuristic 정렬 기준
+    def sort_by(self, city1, city2):
+        dist1 = distance([float(city1[0]), float(city1[1])],
+                         [float(city2[0]), float(city2[0])])
+        dist2 = distance([float(city1[0]), float(city1[1])],
+                         [float(city2[0]), float(city2[1])])
+        return dist1 / dist2 if dist2 != 0 else float("inf")
+
     def heuristic(self, adj, visit):
         centroid = self.update_centroid(visit)
-        tmp = sorted(adj[visit], key=lambda x:
-                     distance([float(cities[x][0]), float(cities[x][1])],
-                              [float(centroid[0]), float(centroid[0])])
-                     / distance([float(cities[0][0]), float(cities[0][1])],
-                                [float(centroid[0]), float(centroid[1])]))
-        return tmp
+        # 시작점과 무게중심이 같아질 경우
+        return sorted(adj[visit], key=lambda x: self.sort_by(cities[x], centroid))
 
 
 # main function
@@ -166,7 +159,7 @@ if __name__ == '__main__':
     ga = Ga_sol(sol1, sol2, cities)
     super_child1 = sol1
     super_child2 = sol2
-    for _ in range(10):        # GA algorithm
+    for _ in range(100):        # GA algorithm
         # 세대교체
         child1_tc = cal_total_cost(sol1)
         child2_tc = cal_total_cost(sol2)
