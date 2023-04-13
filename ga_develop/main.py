@@ -93,7 +93,7 @@ class Main:
         self.sol2 = [0 for _ in range(1001)]
 
         # with open('./../example_solution.csv', mode='r', newline='') as solution:
-        with open('/Users/tuandanh/Desktop/Soongsil_3-1/Ai/ai-team_project/greedy_solution.csv', mode='r', newline='') as solution:
+        with open('./../greedy_solution.csv', mode='r', newline='') as solution:
 
             order = 0
             # read sol1ution sequence
@@ -103,7 +103,7 @@ class Main:
                 order += 1
 
         # need to change this file into new csv sol2
-        with open('/Users/tuandanh/Desktop/Soongsil_3-1/Ai/ai-team_project/greedy_solution_2.csv', mode='r', newline='') as solution:
+        with open('./../greedy_solution_2.csv', mode='r', newline='') as solution:
 
             order = 0
             # read sol1ution sequence
@@ -113,7 +113,7 @@ class Main:
                 order += 1
 
         # get TSP city map
-        with open('/Users/tuandanh/Desktop/Soongsil_3-1/Ai/ai-team_project/2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
+        with open('./../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
             # read TSP city map
             reader = csv.reader(tsp)
             for row in reader:
