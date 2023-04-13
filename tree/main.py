@@ -209,5 +209,6 @@ if __name__ == '__main__':
     sol = []
     main = Main()
     main.make_tree()
+    sol = sol[:1000]
     main.make_csv("ga_solution.csv", sol)
     print(main.cal_total_cost(sol))
