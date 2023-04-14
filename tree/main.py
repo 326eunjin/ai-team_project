@@ -1,7 +1,6 @@
 import csv
 import numpy as np
 import random as rd
-import heapq
 
 
 def distance(x, y):
@@ -18,7 +17,6 @@ class Ga_sol:
         self.adj = self.make_adj_list()
         self.dist_adj = self.make_dist_adj(dist_bound)
         self.visited_cities = set()
-        self.unvisited_cities = set(list(range(1000)))
     # 세대 교체 메소드
 
     def generation_change(self, super_child1, super_child2):
@@ -178,16 +176,14 @@ class Ga_sol:
                     return self.dist_adj[visit][i]
             visit = rd.choice(self.dist_adj[visit])
 
-    # GA Algorithm Solution
+        # GA Algorithm Solution
     def ga_sol(self, mutation_prob):
         sol = [0 for _ in range(1001)]  # 결과값
         visit = 0   # current city (start at 0)
         order = 0
-        flag = True
+        # flag = True
         self.visited_cities = set()  # 이미 간 도시인지 확인/여기선 초기화
-        self.unvisited_cities = set(list(range(1000)))
         self.visited_cities.add(visit)  # 현재 도시 집합에 추가
-        self.unvisited_cities.remove(visit)
 
         # visit all cities
         while len(self.visited_cities) < 1000:  # 종료조건 모든 점 순회
@@ -195,41 +191,29 @@ class Ga_sol:
             # visit 현재 도시
             # x가 갈 수 있는 모든 도시
             self.adj[visit] = sorted(self.adj[visit], key=lambda x:
-                                     self.cal_heuristic(self.cities[x])+self.cal_total_cost(sol))
+                                     self.cal_heuristic(self.cities[x]) +
+                                     distance([float(self.cities[visit][0]), float(self.cities[visit][1])],
+                                              [float(self.cities[x][0]), float(self.cities[x][1])]))
             # g(n)+h(n) 기준 정렬
             for i in range(len(self.adj[visit])):  # 인접도시 돌면서
                 if self.adj[visit][i] not in self.visited_cities:  # 인접도시가 방문하지 않은 도시면
                     # 인접 도시와의 거리가 dist_bound보다 작으면 mutation_prob 확률로 이동
-                    if (flag):
-                        if rd.random() > mutation_prob or self.isin_bound(self.cities[visit], self.cities[self.adj[visit][i]]):
-                            visit = self.adj[visit][i]
+                    # if (flag):
+                    if rd.random() > mutation_prob or self.isin_bound(self.cities[visit], self.cities[self.adj[visit][i]]):
+                        visit = self.adj[visit][i]
                     # 아니면 돌연변이 발생
-                        else:
-                            visit = self.mutation(visit)
+                    else:
+                        visit = self.mutation(visit)
                     # 순서++
                     order += 1
                     sol[order] = visit
                     # 현재 도시 추가
                     self.visited_cities.add(visit)
-                    self.unvisited_cities.discard(visit)
-                    flag = True
                     # 갔다온 도시 목록에도 추가
                     break
-                # 내가 갈 수 있는 도시가 모두 이미 방문한 도시이면
+                # 내가 갈 수 있는 도시가 모두 이미 방문한 도시이면 가까운 도시중 하나로 이동
                 elif i == len(self.adj[visit]) - 1:
-                    visit = rd.choice(list(self.unvisited_cities))
-                    flag = False
-                    # visit = self.mutation(
-                    #     rd.choice(self.dist_adj[visit]))
-                    # min = float("inf")
-                    # minarg = visit
-                    # for city in self.unvisited_cities:
-                    #     tmp = distance([float(self.cities[city][0]), float(self.cities[city][1])],
-                    #                    [float(self.cities[visit][0]), float(self.cities[visit][1])])
-                    #     if min > tmp:
-                    #         min = tmp
-                    #         minarg = city
-                    # visit = minarg
+                    visit = rd.choice(list(self.dist_adj[visit]))
         return sol
 
 
@@ -294,12 +278,12 @@ class Main:
 # main function
 if __name__ == '__main__':
     sol = []
-    dist_bound = 25
+    dist_bound = 15
     mutation_prob = 0.5
     main = Main()
     ga = Ga_sol(main.sol1, main.sol2, main.cities, dist_bound)
     # 세대 교체
-    for _ in range(5):
+    for _ in range(50):
         super_child1 = ga.sol1
         super_child2 = ga.sol2
         child1_tc = main.cal_total_cost(super_child1)
@@ -319,5 +303,5 @@ if __name__ == '__main__':
         ga.generation_change(super_child1, super_child2)
     sol = (super_child1 if child1_tc < child2_tc else super_child2)
     sol = sol[:1000]
-    main.make_csv("tree_solution.csv", sol)
+    main.make_csv("tree_solution_2.csv", sol)
     print(main.cal_total_cost(sol))
