@@ -54,7 +54,7 @@ if __name__ == '__main__':
     total_cost = float("inf")
     for idx in range(500):
         tmp_sol = rand.random_sol()
-        tmp_tc = main.cal_total_cost(sol)
+        tmp_tc = main.cal_total_cost(tmp_sol)
         if total_cost > tmp_tc:
             sol = tmp_sol
             total_cost = tmp_tc
