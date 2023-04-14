@@ -2,9 +2,9 @@ import csv
 import numpy as np
 import random as rd
 
+
+
 # Euclidean distance measuring function
-
-
 def distance(x, y):
     dist = np.linalg.norm(np.array(x) - np.array(y))
     return dist
@@ -20,7 +20,8 @@ class Ga_sol:
         self.dist_adj = self.make_dist_adj()
         self.visited_cities = set()
 
-    def generation_change(self, super_child1, super_child2):   # 세대 교체 메소드
+    # 세대 교체 메소드
+    def generation_change(self, super_child1, super_child2):
         self.sol1 = super_child1
         self.sol2 = super_child2
         self.adj = self.make_adj_list()
@@ -49,8 +50,6 @@ class Ga_sol:
         return distance([float(city1[0]), float(city1[1])],
                         [float(city2[0]), float(city2[1])]) < self.dist_bound
 
-    # GA Algorithm Solution
-
     def mutation(self, visit):
         while True:
             for i in range(len(self.dist_adj[visit])):
@@ -60,7 +59,7 @@ class Ga_sol:
 
     def ga_sol(self, mutation_prob):
         sol = [0 for _ in range(1001)]
-        visit = 0                   # current city (start at 0)
+        visit = 0
         order = 0
 
         self.visited_cities = set()
@@ -151,16 +150,18 @@ if __name__ == '__main__':
     main = Main()
     ga = Ga_sol(main.sol1, main.sol2, main.cities, dist_bound)
 
-    for _ in range(10):     # GA algorithm
+    # 간선 재조합 알고리즘
+    for _ in range(10):
         super_child1 = ga.sol1
         super_child2 = ga.sol2
         child1_tc = main.cal_total_cost(super_child1)
         child2_tc = main.cal_total_cost(super_child2)
-        # ga_sol 여러번 돌리기
-        for _ in range(15):    # 자식 pool 만들기
+        # 자식 pool 만들기
+        for _ in range(15):
             tmp_sol = ga.ga_sol(mutation_prob)
             tmp_tc = main.cal_total_cost(tmp_sol)
-            if (child1_tc > tmp_tc) or (child2_tc > tmp_tc):          # 가장 우수한 자식쌍 유지
+            # 가장 우수한 자식쌍 유지
+            if (child1_tc > tmp_tc) or (child2_tc > tmp_tc):
                 if child1_tc > child2_tc:
                     super_child1 = tmp_sol
                     child1_tc = tmp_tc
