@@ -79,7 +79,7 @@ class Ga_sol:
                     self.visited_cities.add(visit)
                     break
                 elif i == len(self.adj[visit]) - 1:
-                    visit = self.adj[visit][i]
+                    visit = rd.choice(self.adj[visit][i])
         return sol
 
 
