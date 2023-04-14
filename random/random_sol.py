@@ -7,7 +7,7 @@ import sys
 cities = []
 
 
-class Random_Solution:
+class Main:
     def __init__(self, cities):
         self.cities = cities
 
@@ -63,5 +63,5 @@ with open('../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as t
     for row in reader:
         cities.append(row)
 
-rd_sol = Random_Solution(cities=cities)
+rd_sol =Main(cities=cities)
 print("Final Cost : ", rd_sol.find_final_cost())
