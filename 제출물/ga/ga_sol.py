@@ -9,6 +9,66 @@ def distance(x, y):
     return dist
 
 
+# 도시 및 solution에 대한 주요 정보 기록
+class Main:
+    # given cities
+    def __init__(self):
+        self.cities = []
+        # sol1ution
+        self.sol1 = [0 for _ in range(1001)]
+        self.sol2 = [0 for _ in range(1001)]
+
+        with open('./../random/solution_03.csv', mode='r', newline='') as solution:
+
+            order = 0
+            # read sol1ution sequence
+            reader = csv.reader(solution)
+            for row in reader:
+                self.sol1[order] = int(row[0])
+                order += 1
+
+        with open('./../example_solution.csv', mode='r', newline='') as solution:
+
+            order = 0
+            # read sol1ution sequence
+            reader = csv.reader(solution)
+            for row in reader:
+                self.sol2[order] = int(row[0])
+                order += 1
+
+        # get TSP city map
+        with open('./../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
+            # read TSP city map
+            reader = csv.reader(tsp)
+            for row in reader:
+                self.cities.append(row)
+
+    # sol 리스트를 받아 csv파일 생성
+    def make_csv(self, path, sol):
+        sol = sol[:1000]
+        f = open(path, 'w')
+        # write each element of sol to the csv file
+        for i in sol:
+            f.write(str(i) + '\n')
+
+    # sol 리스트를 받아 총 거리 반환
+    def cal_total_cost(self, sol):
+        # evaluate solution cost
+        total_cost = 0
+        for idx in range(len(sol)-1):
+            # get city positions
+            pos_city_1 = [float(self.cities[sol[idx]][0]),
+                          float(self.cities[sol[idx]][1])]
+            pos_city_2 = [float(self.cities[sol[idx+1]][0]),
+                          float(self.cities[sol[idx+1]][1])]
+            # distance calculation
+            dist = distance(pos_city_1, pos_city_2)
+            # accumulation
+            total_cost += dist
+        return total_cost
+
+
+# GA 알고리즘
 class Ga_sol:
     def __init__(self, sol1, sol2, cities, dist_bound):
         self.sol1 = sol1
@@ -25,6 +85,7 @@ class Ga_sol:
         self.sol2 = super_child2
         self.adj = self.make_adj_list()
 
+    # 인접리스트 생성
     def make_adj_list(self):
         adjacency_list = [0 for _ in range(1000)]
         for i in range(1000):
@@ -36,6 +97,7 @@ class Ga_sol:
             adjacency_list[i] = list(tmp_set)
         return adjacency_list
 
+    # 거리 인접리스트 생성
     def make_dist_adj(self):
         adj_matrix = [[] for _ in self.cities]
         for _from in range(len(self.cities)):
@@ -45,10 +107,12 @@ class Ga_sol:
                     adj_matrix[_from].append(_to)
         return adj_matrix
 
+    # 두 도시간 거리가 dist_bound보다 작은지 확인
     def isin_bound(self, city1, city2):
         return distance([float(city1[0]), float(city1[1])],
                         [float(city2[0]), float(city2[1])]) < self.dist_bound
 
+    # 유전자 돌연변이
     def mutation(self, visit):
         while True:
             for i in range(len(self.dist_adj[visit])):
@@ -56,6 +120,7 @@ class Ga_sol:
                     return self.dist_adj[visit][i]
             visit = rd.choice(self.dist_adj[visit])
 
+    # 간선 재조합 알고리즘
     def ga_sol(self, mutation_prob):
         sol = [0 for _ in range(1001)]
         visit = 0
@@ -79,65 +144,8 @@ class Ga_sol:
                     self.visited_cities.add(visit)
                     break
                 elif i == len(self.adj[visit]) - 1:
-                    visit = rd.choice(self.adj[visit][i])
+                    visit = rd.choice(self.adj[visit])
         return sol
-
-
-class Main:
-    # given cities
-    def __init__(self):
-        self.cities = []
-        # sol1ution
-        self.sol1 = [0 for _ in range(1001)]
-        self.sol2 = [0 for _ in range(1001)]
-
-        with open('./../random/solution_03.csv', mode='r', newline='') as solution:
-
-            order = 0
-            # read sol1ution sequence
-            reader = csv.reader(solution)
-            for row in reader:
-                self.sol1[order] = int(row[0])
-                order += 1
-
-        # need to change this file into new csv sol2
-        with open('./../example_solution.csv', mode='r', newline='') as solution:
-
-            order = 0
-            # read sol1ution sequence
-            reader = csv.reader(solution)
-            for row in reader:
-                self.sol2[order] = int(row[0])
-                order += 1
-
-        # get TSP city map
-        with open('./../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
-            # read TSP city map
-            reader = csv.reader(tsp)
-            for row in reader:
-                self.cities.append(row)
-
-    def make_csv(self, path, sol):
-        sol = sol[:1000]
-        f = open(path, 'w')
-        # write each element of sol to the csv file
-        for i in sol:
-            f.write(str(i) + '\n')
-
-    def cal_total_cost(self, sol):
-        # evaluate solution cost
-        total_cost = 0
-        for idx in range(len(sol)-1):
-            # get city positions
-            pos_city_1 = [float(self.cities[sol[idx]][0]),
-                          float(self.cities[sol[idx]][1])]
-            pos_city_2 = [float(self.cities[sol[idx+1]][0]),
-                          float(self.cities[sol[idx+1]][1])]
-            # distance calculation
-            dist = distance(pos_city_1, pos_city_2)
-            # accumulation
-            total_cost += dist
-        return total_cost
 
 
 # main function
@@ -149,7 +157,7 @@ if __name__ == '__main__':
     ga = Ga_sol(main.sol1, main.sol2, main.cities, dist_bound)
 
     # 간선 재조합 알고리즘
-    for _ in range(5000):
+    for _ in range(500):
         super_child1 = ga.sol1
         super_child2 = ga.sol2
         child1_tc = main.cal_total_cost(super_child1)
@@ -166,6 +174,7 @@ if __name__ == '__main__':
                 else:
                     super_child2 = tmp_sol
                     child2_tc = tmp_tc
+        # 가장 우수한 두 자식해로 세대교체 발생
         ga.generation_change(super_child1, super_child2)
     sol = (super_child1 if child1_tc > child2_tc else super_child2)
     main.make_csv("solution_03.csv", sol)

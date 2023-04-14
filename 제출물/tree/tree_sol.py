@@ -3,38 +3,54 @@ import numpy as np
 import random as rd
 
 
+# Euclidean distance measuring function
 def distance(x, y):
     dist = np.linalg.norm(np.array(x) - np.array(y))
     return dist
 
 
-class Ga_sol:
-    def __init__(self, sol1, sol2, cities, dist_bound):
-        self.sol1 = sol1
-        self.sol2 = sol2
-        self.cities = cities
-        self.dist_bound = dist_bound
-        self.adj = self.make_adj_list()
-        self.dist_adj = self.make_dist_adj(dist_bound)
-        self.visited_cities = set()
-    # 세대 교체 메소드
+# 도시 및 solution에 대한 주요 정보 기록
+class Main:
+    # given cities
+    def __init__(self):
+        self.cities = []
+        # sol1ution
+        self.sol1 = [0 for _ in range(1001)]
+        self.sol2 = [0 for _ in range(1001)]
 
-    def generation_change(self, super_child1, super_child2):
-        self.sol1 = super_child1
-        self.sol2 = super_child2
-        self.adj = self.make_adj_list()
+        with open('./../example_solution.csv', mode='r', newline='') as solution:
 
-    def make_adj_list(self):
-        adjacency_list = [0 for _ in range(1000)]
-        for i in range(1000):
-            tmp_set = set()
-            tmp_set.add(self.sol1[(self.sol1.index(i)+999) % 1000])
-            tmp_set.add(self.sol2[(self.sol2.index(i)+999) % 1000])
-            tmp_set.add(self.sol1[(self.sol1.index(i)+1) % 1000])
-            tmp_set.add(self.sol2[(self.sol2.index(i)+1) % 1000])
-            adjacency_list[i] = list(tmp_set)
-        return adjacency_list
+            order = 0
+            # read sol1ution sequence
+            reader = csv.reader(solution)
+            for row in reader:
+                self.sol1[order] = int(row[0])
+                order += 1
 
+        with open('./../random/solution_03.csv', mode='r', newline='') as solution:
+
+            order = 0
+            # read sol1ution sequence
+            reader = csv.reader(solution)
+            for row in reader:
+                self.sol2[order] = int(row[0])
+                order += 1
+
+        # get TSP city map
+        with open('./../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
+            # read TSP city map
+            reader = csv.reader(tsp)
+            for row in reader:
+                self.cities.append(row)
+
+    # sol 리스트를 받아 csv파일 생성
+    def make_csv(self, path, sol):
+        f = open(path, 'w')
+        # write each element of sol to the csv file
+        for i in sol:
+            f.write(str(i) + '\n')
+
+    # sol 리스트를 받아 총 거리 반환
     def cal_total_cost(self, sol):
         # evaluate solution cost
         total_cost = 0
@@ -52,6 +68,47 @@ class Ga_sol:
             total_cost += dist
         return total_cost
 
+
+# GA 알고리즘
+class Ga_sol:
+    def __init__(self, sol1, sol2, cities, dist_bound):
+        self.sol1 = sol1
+        self.sol2 = sol2
+        self.cities = cities
+        self.dist_bound = dist_bound
+        self.adj = self.make_adj_list()
+        self.dist_adj = self.make_dist_adj(dist_bound)
+        self.visited_cities = set()
+    
+    # 세대 교체 메소드
+    def generation_change(self, super_child1, super_child2):
+        self.sol1 = super_child1
+        self.sol2 = super_child2
+        self.adj = self.make_adj_list()
+
+    # 인접리스트 생성
+    def make_adj_list(self):
+        adjacency_list = [0 for _ in range(1000)]
+        for i in range(1000):
+            tmp_set = set()
+            tmp_set.add(self.sol1[(self.sol1.index(i)+999) % 1000])
+            tmp_set.add(self.sol2[(self.sol2.index(i)+999) % 1000])
+            tmp_set.add(self.sol1[(self.sol1.index(i)+1) % 1000])
+            tmp_set.add(self.sol2[(self.sol2.index(i)+1) % 1000])
+            adjacency_list[i] = list(tmp_set)
+        return adjacency_list
+    
+    # 거리 인접리스트 생성
+    def make_dist_adj(self, dist_bound):
+        adj_matrix = [[] for _ in self.cities]
+        for _from in range(len(self.cities)):
+            for _to in range(len(self.cities)):
+                if distance([float(self.cities[_from][0]), float(self.cities[_from][1])],
+                            [float(self.cities[_to][0]), float(self.cities[_to][1])]) < dist_bound:
+                    adj_matrix[_from].append(_to)
+        return adj_matrix
+
+    # 한 점을 기준으로한 사분면 위의 가장 먼 거리에 있는 점의 좌표 리스트 반환
     def cal_four_points(self, x, y):
         unvisited_cities = set(list(range(1000))) - self.visited_cities
         q_1 = []
@@ -107,6 +164,7 @@ class Ga_sol:
         ret.append(tmp)
         return (ret)
 
+    # heuristic 값으로써 현재 도시로부터의 대략적인 순회 거리 반환
     def cal_heuristic(self, city):
         x = float(city[0])
         y = float(city[1])
@@ -156,19 +214,12 @@ class Ga_sol:
                            point_list[tmp[1][1]])+tmp[0][0]+tmp[1][0]
         return ret
 
-    def make_dist_adj(self, dist_bound):
-        adj_matrix = [[] for _ in self.cities]
-        for _from in range(len(self.cities)):
-            for _to in range(len(self.cities)):
-                if distance([float(self.cities[_from][0]), float(self.cities[_from][1])],
-                            [float(self.cities[_to][0]), float(self.cities[_to][1])]) < dist_bound:
-                    adj_matrix[_from].append(_to)
-        return adj_matrix
-
+    # 두 도시간 거리가 dist_bound보다 작은지 확인
     def isin_bound(self, city1, city2):
         return distance([float(city1[0]), float(city1[1])],
                         [float(city2[0]), float(city2[1])]) < self.dist_bound
 
+    # 유전자 돌연변이
     def mutation(self, visit):
         while True:
             for i in range(len(self.dist_adj[visit])):
@@ -176,102 +227,37 @@ class Ga_sol:
                     return self.dist_adj[visit][i]
             visit = rd.choice(self.dist_adj[visit])
 
-        # GA Algorithm Solution
+    # GA Algorithm Solution
     def ga_sol(self, mutation_prob):
         sol = [0 for _ in range(1001)]  # 결과값
-        visit = 0   # current city (start at 0)
+        visit = 0                       # 현재 도시 (0부터 시작)
         order = 0
-        # flag = True
-        self.visited_cities = set()  # 이미 간 도시인지 확인/여기선 초기화
+        self.visited_cities = set()     # 이미 간 도시인지 확인/여기선 초기화
         self.visited_cities.add(visit)  # 현재 도시 집합에 추가
 
         # visit all cities
-        while len(self.visited_cities) < 1000:  # 종료조건 모든 점 순회
-            # visit 현재 도시
-            # x가 갈 수 있는 모든 도시
+        while len(self.visited_cities) < 1000:  # 모든 점 순회 후 탈출
+            # g(n) + h(n) 기준으로 최적 도시 판단
             self.adj[visit] = sorted(self.adj[visit], key=lambda x:
                                      self.cal_heuristic(self.cities[x]) +
                                      distance([float(self.cities[visit][0]), float(self.cities[visit][1])],
                                               [float(self.cities[x][0]), float(self.cities[x][1])]))
-            # g(n)+h(n) 기준 정렬
             for i in range(len(self.adj[visit])):  # 인접도시 돌면서
                 if self.adj[visit][i] not in self.visited_cities:  # 인접도시가 방문하지 않은 도시면
                     # 인접 도시와의 거리가 dist_bound보다 작으면 mutation_prob 확률로 이동
-                    # if (flag):
                     if rd.random() > mutation_prob or self.isin_bound(self.cities[visit], self.cities[self.adj[visit][i]]):
                         visit = self.adj[visit][i]
-                    # 아니면 돌연변이 발생
+                    # 일정 확률로 돌연변이 발생
                     else:
                         visit = self.mutation(visit)
-                    # 순서++
                     order += 1
-                    sol[order] = visit
-                    # 현재 도시 추가
-                    self.visited_cities.add(visit)
-                    # 갔다온 도시 목록에도 추가
+                    sol[order] = visit              # 현재 도시 추가
+                    self.visited_cities.add(visit)  # 갔다온 도시 목록에도 추가
                     break
                 # 내가 갈 수 있는 도시가 모두 이미 방문한 도시이면 가까운 도시중 하나로 이동
                 elif i == len(self.adj[visit]) - 1:
                     visit = rd.choice(list(self.dist_adj[visit]))
         return sol
-
-
-class Main:
-    # given cities
-    def __init__(self):
-        self.cities = []
-        # sol1ution
-        self.sol1 = [0 for _ in range(1001)]
-        self.sol2 = [0 for _ in range(1001)]
-        # with open('./../example_solution.csv', mode='r', newline='') as solution:
-        with open('./../example_solution.csv', mode='r', newline='') as solution:
-
-            order = 0
-            # read sol1ution sequence
-            reader = csv.reader(solution)
-            for row in reader:
-                self.sol1[order] = int(row[0])
-                order += 1
-
-        # need to change this file into new csv sol2
-        with open('./../random/solution_03.csv', mode='r', newline='') as solution:
-
-            order = 0
-            # read sol1ution sequence
-            reader = csv.reader(solution)
-            for row in reader:
-                self.sol2[order] = int(row[0])
-                order += 1
-
-        # get TSP city map
-        with open('./../2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
-            # read TSP city map
-            reader = csv.reader(tsp)
-            for row in reader:
-                self.cities.append(row)
-
-    def make_csv(self, path, sol):
-        f = open(path, 'w')
-        # write each element of sol to the csv file
-        for i in sol:
-            f.write(str(i) + '\n')
-
-    def cal_total_cost(self, sol):
-        # evaluate solution cost
-        total_cost = 0
-        for idx in range(len(sol)-1):
-            # get city positions
-            pos_city_1 = [float(self.cities[sol[idx]][0]),
-                          float(self.cities[sol[idx]][1])]
-            pos_city_2 = [float(self.cities[sol[idx+1]][0]),
-                          float(self.cities[sol[idx+1]][1])]
-
-            # distance calculation
-            dist = distance(pos_city_1, pos_city_2)
-
-            # accumulation
-            total_cost += dist
-        return total_cost
 
 
 # main function
