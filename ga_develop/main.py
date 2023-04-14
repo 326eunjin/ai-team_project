@@ -15,8 +15,9 @@ class Ga_sol:
         self.sol1 = sol1
         self.sol2 = sol2
         self.cities = cities
+        self.dist_bound = dist_bound
         self.adj = self.make_adj_list()
-        self.dist_adj = self.make_dist_adj(dist_bound)
+        self.dist_adj = self.make_dist_adj()
         self.visited_cities = set()
 
     def generation_change(self, super_child1, super_child2):   # 세대 교체 메소드
@@ -35,18 +36,18 @@ class Ga_sol:
             adjacency_list[i] = list(tmp_set)
         return adjacency_list
 
-    def make_dist_adj(self, dist_bound):
+    def make_dist_adj(self):
         adj_matrix = [[] for _ in self.cities]
         for _from in range(len(self.cities)):
             for _to in range(len(self.cities)):
                 if distance([float(self.cities[_from][0]), float(self.cities[_from][1])],
-                            [float(self.cities[_to][0]), float(self.cities[_to][1])]) < dist_bound:
+                            [float(self.cities[_to][0]), float(self.cities[_to][1])]) < self.dist_bound:
                     adj_matrix[_from].append(_to)
         return adj_matrix
 
     def isin_bound(self, city1, city2):
         return distance([float(city1[0]), float(city1[1])],
-                        [float(city2[0]), float(city2[1])]) < dist_bound
+                        [float(city2[0]), float(city2[1])]) < self.dist_bound
 
     # GA Algorithm Solution
 
