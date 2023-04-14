@@ -16,7 +16,8 @@ class Ga_sol:
         self.adj = self.make_adj_list()
         self.visited_cities = set()
 
-    def generation_change(self, super_child1, super_child2):   # 세대 교체 메소드
+    # 세대 교체 메소드
+    def generation_change(self, super_child1, super_child2):
         self.sol1 = super_child1
         self.sol2 = super_child2
         self.adj = self.make_adj_list()
@@ -31,7 +32,6 @@ class Ga_sol:
             tmp_set.add(self.sol2[(self.sol2.index(i)+1) % 1000])
             adjacency_list[i] = list(tmp_set)
         return adjacency_list
-        # heuristic 정렬 기준 (다음 점까지의 거리)
 
     def sort_by(self, city1, city2):
         return distance([float(city1[0]), float(city1[1])],
@@ -40,7 +40,7 @@ class Ga_sol:
     # GA Algorithm Solution
     def ga_sol(self):
         sol = [0 for _ in range(1001)]
-        visit = 0                   # current city (start at 0)
+        visit = 0   # current city (start at 0)
         order = 0
 
         self.visited_cities = set()
@@ -67,20 +67,19 @@ class Main:
     # given cities
     def __init__(self):
         self.cities = []
-# sol1ution
+        # sol1ution
         self.sol1 = [0 for _ in range(1001)]
         self.sol2 = [0 for _ in range(1001)]
-# with open('./../example_solution.csv', mode='r', newline='') as solution:
         with open('/Users/jang-eunjin/Desktop/ai-team_project/example_solution.csv', mode='r', newline='') as solution:
 
             order = 0
-        # read sol1ution sequence
+            # read sol1ution sequence
             reader = csv.reader(solution)
             for row in reader:
                 self.sol1[order] = int(row[0])
                 order += 1
 
-    # need to change this file into new csv sol2
+        # need to change this file into new csv sol2
         with open('/Users/jang-eunjin/Desktop/ai-team_project/random/random_solution.csv', mode='r', newline='') as solution:
 
             order = 0
@@ -96,8 +95,6 @@ class Main:
             reader = csv.reader(tsp)
             for row in reader:
                 self.cities.append(row)
-
-        # Euclidean distance measuring function
 
     def make_csv(self, path, sol):
         f = open(path, 'w')
@@ -115,13 +112,12 @@ class Main:
             pos_city_2 = [float(self.cities[sol[idx+1]][0]),
                           float(self.cities[sol[idx+1]][1])]
 
-        # distance calculation
+            # distance calculation
             dist = distance(pos_city_1, pos_city_2)
 
-        # accumulation
+            # accumulation
             total_cost += dist
         return total_cost
-        # print('final cost: '+str(total_cost))
 
 
 # main function
@@ -129,16 +125,17 @@ if __name__ == '__main__':
     sol = []
     main = Main()
     ga = Ga_sol(main.sol1, main.sol2, main.cities)
-    for _ in range(100):     # GA algorithm
+    for _ in range(100):
         super_child1 = ga.sol1
         super_child2 = ga.sol2
         child1_tc = main.cal_total_cost(super_child1)
         child2_tc = main.cal_total_cost(super_child2)
-        # ga_sol 여러번 돌리기
-        for _ in range(10):    # 자식 pool 만들기
+        # 자식 pool 만들기
+        for _ in range(10):
             tmp_sol = ga.ga_sol()
             tmp_tc = main.cal_total_cost(tmp_sol)
-            if (child1_tc > tmp_tc) or (child2_tc > tmp_tc):          # 가장 우수한 자식쌍 유지
+            # 가장 우수한 자식쌍 유지
+            if (child1_tc > tmp_tc) or (child2_tc > tmp_tc):
                 if child1_tc > child2_tc:
                     super_child1 = tmp_sol
                     child1_tc = tmp_tc

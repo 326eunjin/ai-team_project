@@ -3,7 +3,6 @@ import numpy as np
 import random as rd
 
 
-
 # Euclidean distance measuring function
 def distance(x, y):
     dist = np.linalg.norm(np.array(x) - np.array(y))
@@ -70,7 +69,7 @@ class Ga_sol:
             for i in range(len(self.adj[visit])):
                 if self.adj[visit][i] not in self.visited_cities:
                     # visit next city (mutation occurs in <mutation_prob>)
-                    if rd.random() < mutation_prob or self.isin_bound(self.cities[visit], self.cities[self.adj[visit][i]]):
+                    if rd.random() > mutation_prob or self.isin_bound(self.cities[visit], self.cities[self.adj[visit][i]]):
                         visit = self.adj[visit][i]
                     else:
                         visit = self.mutation(visit)
@@ -93,7 +92,7 @@ class Main:
         self.sol2 = [0 for _ in range(1001)]
 
         # with open('./../example_solution.csv', mode='r', newline='') as solution:
-        with open('./../greedy_solution.csv', mode='r', newline='') as solution:
+        with open('./../random/random_solution.csv', mode='r', newline='') as solution:
 
             order = 0
             # read sol1ution sequence
@@ -103,7 +102,7 @@ class Main:
                 order += 1
 
         # need to change this file into new csv sol2
-        with open('./../greedy_solution_2.csv', mode='r', newline='') as solution:
+        with open('./../example_solution.csv', mode='r', newline='') as solution:
 
             order = 0
             # read sol1ution sequence
@@ -146,7 +145,7 @@ class Main:
 if __name__ == '__main__':
     sol = []
     dist_bound = 10
-    mutation_prob = 0.5
+    mutation_prob = 1
     main = Main()
     ga = Ga_sol(main.sol1, main.sol2, main.cities, dist_bound)
 

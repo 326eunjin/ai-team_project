@@ -81,7 +81,7 @@ with open('2023_AI_TSP.csv', mode='r', newline='', encoding='utf-8-sig') as tsp:
 
 sol = []
 # 1. get solution sequence and reordering (sort from 0)
-with open('./greedy_solution.csv', mode='r', newline='') as solution:
+with open('./tree/tree_solution.csv', mode='r', newline='') as solution:
 
     # read solution sequence
     reader = csv.reader(solution)
